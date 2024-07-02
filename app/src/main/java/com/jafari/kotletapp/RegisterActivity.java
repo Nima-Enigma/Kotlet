@@ -18,7 +18,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText lastName = findViewById(R.id.lastName);
         EditText email = findViewById(R.id.email);
         EditText password = findViewById(R.id.password);
-        Button btn = findViewById(R.id.btn);
+        Button btn = findViewById(R.id.registerBtn);
         btn.setOnClickListener(v -> {
             boolean success = databaseHelper.addUser(email.getText().toString(), password.getText().toString(),
                                     firstName.getText().toString() + " " + lastName.getText().toString());
