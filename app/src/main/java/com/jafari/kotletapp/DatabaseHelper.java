@@ -1,6 +1,5 @@
 package com.jafari.kotletapp;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -8,21 +7,30 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import androidx.annotation.ContentView;
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private Context context;
+    private final Context context;
 
     private static final String DATABASE_NAME = "kotlet";
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_USERS = "users";
-    private static final String COLUMN_ID = "_id";
-    private static final String COLUMN_EMAIL = "email";
-    private static final String COLUMN_PASSWORD = "password";
-    private static final String COLUMN_FULL_NAME = "full_name";
+    private static final String USERS_COLUMN_ID = "_id";
+    private static final String USERS_COLUMN_EMAIL = "email";
+    private static final String USERS_COLUMN_PASSWORD = "password";
+    private static final String USERS_COLUMN_FULL_NAME = "full_name";
+
+
+    private static final String TABLE_INGREDIENTS = "ingredients";
+    private static final String INGREDIENTS_COLUMN_ID = "_id";
+    private static final String INGREDIENTS_COLUMN_NAME = "name";
+    private static final String INGREDIENTS_COLUMN_CALORIE = "calorie";
 
 
     public DatabaseHelper(@Nullable Context context) {
@@ -32,10 +40,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = "CREATE TABLE " + TABLE_USERS +
-                        " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_FULL_NAME + " TEXT)";
-        db.execSQL(query);
+        db.execSQL("CREATE TABLE " + TABLE_USERS + " (" +
+                USERS_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                USERS_COLUMN_EMAIL + " TEXT UNIQUE, " +
+                USERS_COLUMN_PASSWORD + " TEXT, " +
+                USERS_COLUMN_FULL_NAME + " TEXT);");
+
+
+        db.execSQL("CREATE TABLE " + TABLE_INGREDIENTS + " (" +
+                INGREDIENTS_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                INGREDIENTS_COLUMN_NAME + " TEXT UNIQUE, " +
+                INGREDIENTS_COLUMN_CALORIE + " REAL);");
     }
 
     @Override
@@ -43,22 +58,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
     }
 
-    boolean addUser(String email, String password, String full_name) {
+    public boolean addUser(String email, String password, String full_name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put(COLUMN_EMAIL, email);
-        cv.put(COLUMN_PASSWORD, password);
-        cv.put(COLUMN_FULL_NAME, full_name);
+        cv.put(USERS_COLUMN_EMAIL, email);
+        cv.put(USERS_COLUMN_PASSWORD, password);
+        cv.put(USERS_COLUMN_FULL_NAME, full_name);
 
         long result = db.insert(TABLE_USERS, null, cv);
         Toast.makeText(context, result == -1 ? "Failed to add user" : "User added successfully", Toast.LENGTH_SHORT).show();
         return result != -1;
     }
 
-    boolean validUser(String email, String password) {
+    public boolean validUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?";
+        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + USERS_COLUMN_EMAIL + "=? AND " + USERS_COLUMN_PASSWORD + "=?";
         Cursor cursor = db.rawQuery(query, new String[]{email, password});
         if (cursor != null) {
             boolean valid = cursor.getCount() > 0;
@@ -68,5 +83,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         Toast.makeText(context, "Invalid", Toast.LENGTH_SHORT).show();
         return false;
+    }
+
+    public String[] allIngredients() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + INGREDIENTS_COLUMN_NAME + " FROM " + TABLE_INGREDIENTS;
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<String> ingredientsList = new ArrayList<>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String ingredient = cursor.getString(cursor.getColumnIndexOrThrow(INGREDIENTS_COLUMN_NAME));
+                ingredientsList.add(ingredient);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        System.out.println("printing " + Arrays.toString(ingredientsList.toArray(new String[0])));
+
+        return ingredientsList.toArray(new String[0]);
+    }
+
+    public void addNewIngredient(String name, double calorie) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(INGREDIENTS_COLUMN_NAME, name);
+        cv.put(INGREDIENTS_COLUMN_CALORIE, calorie);
+
+        long newRowId = db.insert(TABLE_INGREDIENTS, null, cv);
+
+        System.out.println("adding " + name);
+
+        db.close();
     }
 }
