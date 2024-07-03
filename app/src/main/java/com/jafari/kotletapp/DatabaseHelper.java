@@ -277,4 +277,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return rowCount;
     }
+
+    public String[] getNameAndDescriptionOfRecipe(String recipe) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String description = null;
+        String name = null;
+
+        String query = "SELECT " + RECIPES_COLUMN_NAME + ", " + RECIPES_COLUMN_DESCRIPTION +
+                        " FROM " + TABLE_RECIPES +
+                        " WHERE " + RECIPES_COLUMN_NAME + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{recipe});
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                name = cursor.getString(cursor.getColumnIndexOrThrow(RECIPES_COLUMN_NAME));
+                description = cursor.getString(cursor.getColumnIndexOrThrow(RECIPES_COLUMN_DESCRIPTION));
+            }
+            cursor.close();
+        }
+        db.close();
+
+        return new String[]{name, description};
+    }
+
+    public String[] getIngredients(String recipe) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> ingredientsList = new ArrayList<>();
+
+        String query = "SELECT i." + INGREDIENTS_COLUMN_NAME +
+                " FROM " + TABLE_INGREDIENTS + " i" +
+                " JOIN " + TABLE_RECIPE_INGREDIENT + " ri ON i." + INGREDIENTS_COLUMN_ID + " = ri." + RECIPE_INGREDIENT_COLUMN_INGREDIENT +
+                " JOIN " + TABLE_RECIPES + " r ON ri." + RECIPE_INGREDIENT_COLUMN_RECIPE + " = r." + RECIPES_COLUMN_ID +
+                " WHERE r." + RECIPES_COLUMN_NAME + " = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{recipe});
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String ingredient = cursor.getString(cursor.getColumnIndexOrThrow(INGREDIENTS_COLUMN_NAME));
+                    ingredientsList.add(ingredient);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        db.close();
+
+        return ingredientsList.toArray(new String[0]);
+    }
 }
