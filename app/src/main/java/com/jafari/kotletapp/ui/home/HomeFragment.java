@@ -35,15 +35,15 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         databaseHelper = new DatabaseHelper(requireActivity());
         items = databaseHelper.allIngredients();
+        autoCompleteTextView = binding.autoComplete;
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_dropdown_item_1line, items);
+        autoCompleteTextView.setAdapter(adapter);
+        autoCompleteTextView.setThreshold(1);
         View root = binding.getRoot();
 
 
         final TextView textView = binding.textHome;
         final Button btn = binding.addBtn;
-        autoCompleteTextView = binding.autoComplete;
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_dropdown_item_1line, items);
-        autoCompleteTextView.setAdapter(adapter);
-        autoCompleteTextView.setThreshold(1);
 
         btn.setOnClickListener(v -> System.out.println("fuck"));
         binding.admBtn.setOnClickListener(v -> {
