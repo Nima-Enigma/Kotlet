@@ -59,6 +59,7 @@ public class HomeFragment extends Fragment {
                 makeCard(ingredients, ingredient);
                 autoCompleteTextView.setText("");
             }
+            System.out.println("ney nigga" + databaseHelper.getTop20Recipes(items));
         });
         binding.admBtn.setOnClickListener(v -> {
             databaseHelper.addNewIngredient(autoCompleteTextView.getText().toString(), 10);
@@ -97,7 +98,6 @@ public class HomeFragment extends Fragment {
             plain.removeView(cardView);
         });
 
-        // Add LinearLayout to CardView
         cardView.addView(textView);
         plain.addView(cardView);
     }
