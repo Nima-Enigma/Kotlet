@@ -160,7 +160,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public void addNewRecipe(String name, String[] ingredients, String description, String creator) {
+    public void addNewRecipe(String name, List<String> ingredients, String description, String creator) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
@@ -189,13 +189,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<Pair<String, Pair<Integer, Integer>>> getTop20Recipes(String[] ingredients) {
+    public List<Pair<String, Pair<Integer, Integer>>> getTop20Recipes(List<String> ingredients) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         StringBuilder ingredientsCondition = new StringBuilder();
-        for (int i = 0; i < ingredients.length; i++) {
-            ingredientsCondition.append("'").append(ingredients[i]).append("'");
-            if (i < ingredients.length - 1)
+        for (int i = 0; i < ingredients.size(); i++) {
+            ingredientsCondition.append("'").append(ingredients.get(i)).append("'");
+            if (i < ingredients.size() - 1)
                 ingredientsCondition.append(", ");
         }
 

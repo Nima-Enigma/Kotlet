@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,21 +63,15 @@ public class HomeFragment extends Fragment {
         autoCompleteTextView.setAdapter(adapter);
         autoCompleteTextView.setThreshold(1);
 
-        clearBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clear();
-            }
-        });
+        clearBtn.setOnClickListener(view -> clear());
 
-        findBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println(extractIngredients(ingredients));
-                ingredients.removeAllViews();
-                ingredients.setColumnCount(1);
-                makeCardRecipe(ingredients);
-            }
+        findBtn.setOnClickListener(view -> {
+            System.out.println(extractIngredients(ingredients));
+            ingredients.removeAllViews();
+            ingredients.setColumnCount(1);
+            makeCardRecipe(ingredients);
+            List<Pair<String, Pair<Integer, Integer>>> availableRecipes =
+                    databaseHelper.getTop20Recipes(extractIngredients(ingredients));
         });
 
         addBtn.setOnClickListener(view -> {
@@ -88,7 +83,7 @@ public class HomeFragment extends Fragment {
                 makeCardIng(ingredients, ingredient);
                 autoCompleteTextView.setText("");
             }
-            System.out.println("ney nigga" + databaseHelper.getTop20Recipes(items));
+            System.out.println("ney nigga" + databaseHelper.getTop20Recipes(extractIngredients(ingredients)));
         });
         binding.admBtn.setOnClickListener(v -> {
             databaseHelper.addNewIngredient(autoCompleteTextView.getText().toString(), 10);

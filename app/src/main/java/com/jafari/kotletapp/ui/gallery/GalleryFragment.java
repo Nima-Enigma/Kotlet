@@ -25,6 +25,9 @@ import com.jafari.kotletapp.DatabaseHelper;
 import com.jafari.kotletapp.R;
 import com.jafari.kotletapp.databinding.FragmentGalleryBinding;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GalleryFragment extends Fragment {
     GridLayout ingredients;
     private FragmentGalleryBinding binding;
@@ -86,8 +89,7 @@ public class GalleryFragment extends Fragment {
 
     private void addRecipe() {
         String description = multiLineEditText.getText().toString();
-        String[] ingredients = items.clone();
-        databaseHelper.addNewRecipe("name", ingredients, description, "creator"); // TODO name and creator
+        databaseHelper.addNewRecipe("name", extractIngredients(ingredients), description, "creator"); // TODO name and creator
     }
 
     public void clear(){
@@ -125,5 +127,32 @@ public class GalleryFragment extends Fragment {
         // Add LinearLayout to CardView
         cardView.addView(textView);
         plain.addView(cardView);
+    }
+
+    public List<String> extractIngredients(GridLayout gridLayout) {
+        List<String> ingredients = new ArrayList<>();
+
+        // Iterate through all children of the GridLayout
+        for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            View child = gridLayout.getChildAt(i);
+
+            // Check if the child is a CardView
+            if (child instanceof CardView) {
+                CardView cardView = (CardView) child;
+
+                // Check if the CardView has exactly one child, which is the TextView
+                if (cardView.getChildCount() == 1) {
+                    View cardChild = cardView.getChildAt(0);
+
+                    // Check if the child is a TextView
+                    if (cardChild instanceof TextView) {
+                        TextView textView = (TextView) cardChild;
+                        ingredients.add(textView.getText().toString());
+                    }
+                }
+            }
+        }
+
+        return ingredients;
     }
 }
