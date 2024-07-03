@@ -202,7 +202,6 @@ public class HomeFragment extends Fragment {
         firstTextView.setLayoutParams(firstTextViewParams);
         firstTextView.setText(recipeName);
         firstTextView.setTextSize(20);
-        firstTextView.setGravity(Gravity.CENTER);
 
         // Create second TextView
         TextView secondTextView = new TextView(requireActivity());

@@ -291,7 +291,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             db.insert(TABLE_RECIPE_INGREDIENT, null, contentValues);
         }
-
+        Toast.makeText(context , "recipe added successfully!" , Toast.LENGTH_SHORT).show();
         db.close();
     }
 
