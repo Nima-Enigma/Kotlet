@@ -66,13 +66,7 @@ public class GalleryFragment extends Fragment {
     }
 
     private void addButton(String text) {
-        boolean isValid = false;
-        for (String item : items)
-            if (item.equals(text)) {
-                isValid = true;
-                break;
-            }
-        if (! isValid)
+        if (! databaseHelper.validIngredient(text))
             return;
 
         for (int i = 0; i < buttonContainer.getChildCount(); i++) {

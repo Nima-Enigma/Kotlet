@@ -53,12 +53,10 @@ public class HomeFragment extends Fragment {
         autoCompleteTextView.setAdapter(adapter);
         autoCompleteTextView.setThreshold(1);
 
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String ingredient = autoCompleteTextView.getText().toString();
-                makeCard(ingredients , ingredient);
+        addBtn.setOnClickListener(view -> {
+            String ingredient = autoCompleteTextView.getText().toString();
+            if (databaseHelper.validIngredient(ingredient)) {
+                makeCard(ingredients, ingredient);
                 autoCompleteTextView.setText("");
             }
         });
@@ -94,6 +92,10 @@ public class HomeFragment extends Fragment {
         textView.setText(ingredient);
         textView.setTextSize(22);
         textView.setGravity(Gravity.CENTER);
+        textView.setOnClickListener(v -> {
+            cardView.removeView(textView);
+            plain.removeView(cardView);
+        });
 
         // Add LinearLayout to CardView
         cardView.addView(textView);

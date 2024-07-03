@@ -149,6 +149,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public boolean validIngredient(String ingredient) {
+        String[] all = allIngredients();
+        for (String i : all)
+            if (i.equals(ingredient))
+                return true;
+        return false;
+    }
+
     public void addNewRecipe(String name, String[] ingredients, String description, String creator) {
         SQLiteDatabase db = this.getWritableDatabase();
 
