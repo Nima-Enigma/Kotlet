@@ -32,6 +32,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String INGREDIENTS_COLUMN_NAME = "name";
     private static final String INGREDIENTS_COLUMN_CALORIE = "calorie";
 
+    private static final String TABLE_RECIPES = "recipes";
+    private static final String RECIPES_COLUMN_ID = "_id";
+    private static final String RECIPES_COLUMN_NAME = "name";
+    private static final String RECIPES_DESCRIPTION = "description";
+    private static final String RECIPES_COLUMN_CREATOR = "creator";
+
+    private static final String TABLE_RECIPE_INGREDIENT = "recipe_ingredient";
+    private static final String RECIPE_INGREDIENT_COLUMN_ID = "_id";
+    private static final String RECIPE_INGREDIENT_COLUMN_RECIPE = "recipe";
+    private static final String RECIPE_INGREDIENT_COLUMN_INGREDIENT = "ingredient";
+
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -51,11 +62,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 INGREDIENTS_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 INGREDIENTS_COLUMN_NAME + " TEXT UNIQUE, " +
                 INGREDIENTS_COLUMN_CALORIE + " REAL);");
+
+        db.execSQL("CREATE TABLE " + TABLE_RECIPES + " (" +
+                RECIPES_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                RECIPES_COLUMN_NAME + " TEXT, " +
+                RECIPES_DESCRIPTION + " TEXT, " +
+                RECIPES_COLUMN_CREATOR + " TEXT);");
+
+        db.execSQL("CREATE TABLE " + TABLE_RECIPE_INGREDIENT + " (" +
+                RECIPE_INGREDIENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                RECIPE_INGREDIENT_COLUMN_RECIPE + " INTEGER, " +
+                RECIPE_INGREDIENT_COLUMN_INGREDIENT + " INTEGER, " +
+                "FOREIGN KEY(" + RECIPE_INGREDIENT_COLUMN_RECIPE + ") REFERENCES " + TABLE_RECIPES + "(" + RECIPES_COLUMN_ID + "), " +
+                "FOREIGN KEY(" + RECIPE_INGREDIENT_COLUMN_INGREDIENT + ") REFERENCES " + TABLE_INGREDIENTS + "(" + INGREDIENTS_COLUMN_ID + "));");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INGREDIENTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPE_INGREDIENT);
+        onCreate(db);
     }
 
     public boolean addUser(String email, String password, String full_name) {
@@ -117,6 +145,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long newRowId = db.insert(TABLE_INGREDIENTS, null, cv);
 
         System.out.println("adding " + name);
+
+        db.close();
+    }
+
+    public void addNewRecipe(String name, String[] ingredients, String description, String creator) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(RECIPES_COLUMN_NAME, name);
+        cv.put(RECIPES_COLUMN_CREATOR, creator);
+        cv.put(RECIPES_DESCRIPTION, description);
+
+        long newRowId = db.insert(TABLE_RECIPES, null, cv);
+
+        for (String ingredient: ingredients) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(RECIPE_INGREDIENT_COLUMN_RECIPE, newRowId);
+            String query = "SELECT " + INGREDIENTS_COLUMN_ID + " FROM " + TABLE_INGREDIENTS +
+                            " WHERE " + INGREDIENTS_COLUMN_NAME + "=?;";
+            Cursor cursor = db.rawQuery(query, new String[]{ingredient});
+            if (cursor != null && cursor.moveToFirst()) {
+                System.out.println("looking for " + ingredient);
+                System.out.println(cursor.getColumnIndex(INGREDIENTS_COLUMN_ID));
+                contentValues.put(RECIPE_INGREDIENT_COLUMN_INGREDIENT, cursor.getLong(0));
+                cursor.close();
+            }
+            db.insert(TABLE_RECIPE_INGREDIENT, null, contentValues);
+        }
 
         db.close();
     }
