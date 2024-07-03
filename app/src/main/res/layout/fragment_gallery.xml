@@ -7,55 +7,114 @@
     tools:context=".ui.gallery.GalleryFragment"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editTextMultiLine"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        >
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@drawable/add_recipe"
+            android:layout_marginEnd="10dp">
+        </ImageView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add recipe"
+                android:fontFamily="sans-serif-black"
+                android:textSize="40sp"
+                android:layout_marginTop="20dp">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What do you have for us?">
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
+    <EditText
+        android:layout_margin="20dp"
+        android:id="@+id/editTextMultiLine"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:hint="instructions"
         android:inputType="textMultiLine"
         android:gravity="top|start"
         android:minLines="3"
-        android:maxLines="6"
         android:scrollbars="vertical"
         android:padding="10dp"
+        android:background="@drawable/custom_edittext"
         />
-
-    <AutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Add ingradient"
-        android:id="@+id/autoComplete"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="add"
-        android:id="@+id/addIngredient"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonContainer"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        android:padding="16dp"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="add"
-        android:id="@+id/addRecipe"/>
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:gravity="start">
+        <AutoCompleteTextView
+            android:layout_width="0dp"
+            android:layout_weight="7"
+            android:layout_height="50dp"
+            android:background="@drawable/custom_edittext"
+            android:hint="Add ingredient"
+            android:id="@+id/autoComplete"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHighlight="@color/cardview_dark_background"
+            android:layout_marginEnd="10dp">
+        </AutoCompleteTextView>
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:id="@+id/addIngredient"
+            android:text="+"
+            android:textSize="18sp"
+            android:backgroundTint="@color/yellow"
+            app:cornerRadius = "30dp"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/text_gallery"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="20dp">
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ingredients"
+            android:columnCount="2">
+
+        </GridLayout>
+    </ScrollView>
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/clearBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/fab_margin"
+            app:srcCompat="@drawable/bin"
+            android:layout_marginBottom="10dp"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addRecipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/fab_margin"
+            app:srcCompat="@drawable/recipe_book" />
 
+    </RelativeLayout>
 </LinearLayout>

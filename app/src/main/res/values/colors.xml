@@ -2,11 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="whitetp">#C6FFFFFF</color>
     <color name="yellow">#FBC02D</color>
     <color name="orange">#F57C00</color>
     <color name="red">#C30A0A</color>
     <color name="gray">#595A5A</color>
-    <color name="lemon">#EDED98</color>
+    <color name="lemon">#F8F696</color>
     <color name="greenishYellow">#E8EF3A</color>
     <color name="green">#52E355</color>
 </resources>
