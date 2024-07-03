@@ -110,12 +110,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             boolean valid = cursor.getCount() > 0;
             cursor.close();
-            Toast.makeText(context, valid ? "OK" : "Invalid", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, valid ? "Welcome" : "Invalid", Toast.LENGTH_SHORT).show();
             return valid;
         }
         db.close();
         Toast.makeText(context, "Invalid", Toast.LENGTH_SHORT).show();
         return false;
+    }
+
+    public String getFullName(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + USERS_COLUMN_EMAIL + "=?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+        if (cursor != null && cursor.moveToFirst()) {
+            String fullName = cursor.getString(cursor.getColumnIndexOrThrow(USERS_COLUMN_FULL_NAME));
+            cursor.close();
+            return fullName;
+        }
+        return "";
     }
 
     public String[] allIngredients() {
@@ -279,5 +291,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // db.close(); //TODO
 
         return rowCount;
+    }
+
+    public String[] getNameAndDescriptionOfRecipe(String recipe) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String description = null;
+        String name = null;
+
+        String query = "SELECT " + RECIPES_COLUMN_NAME + ", " + RECIPES_COLUMN_DESCRIPTION +
+                        " FROM " + TABLE_RECIPES +
+                        " WHERE " + RECIPES_COLUMN_NAME + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{recipe});
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                name = cursor.getString(cursor.getColumnIndexOrThrow(RECIPES_COLUMN_NAME));
+                description = cursor.getString(cursor.getColumnIndexOrThrow(RECIPES_COLUMN_DESCRIPTION));
+            }
+            cursor.close();
+        }
+        db.close();
+
+        return new String[]{name, description};
+    }
+
+    public String[] getIngredients(String recipe) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> ingredientsList = new ArrayList<>();
+
+        String query = "SELECT i." + INGREDIENTS_COLUMN_NAME +
+                " FROM " + TABLE_INGREDIENTS + " i" +
+                " JOIN " + TABLE_RECIPE_INGREDIENT + " ri ON i." + INGREDIENTS_COLUMN_ID + " = ri." + RECIPE_INGREDIENT_COLUMN_INGREDIENT +
+                " JOIN " + TABLE_RECIPES + " r ON ri." + RECIPE_INGREDIENT_COLUMN_RECIPE + " = r." + RECIPES_COLUMN_ID +
+                " WHERE r." + RECIPES_COLUMN_NAME + " = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{recipe});
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String ingredient = cursor.getString(cursor.getColumnIndexOrThrow(INGREDIENTS_COLUMN_NAME));
+                    ingredientsList.add(ingredient);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        db.close();
+
+        return ingredientsList.toArray(new String[0]);
     }
 }

@@ -31,7 +31,7 @@
 
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
             android:text="Kotlet"
@@ -42,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="FULL NAME"
+            android:id="@+id/fullNameTV"
             android:textSize="15sp"
             android:textColor="@color/gray"
             android:layout_marginTop="10dp"
@@ -50,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="email@gmail.com"
+            android:id="@+id/emailTV"
             android:textSize="10sp"
             android:textColor="@color/gray"
             />

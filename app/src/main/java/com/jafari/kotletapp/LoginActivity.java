@@ -27,7 +27,10 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(v -> {
             boolean valid_user = databaseHelper.validUser(email.getText().toString(), password.getText().toString());
             if (valid_user) {
+                String fullName = databaseHelper.getFullName(email.getText().toString());
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                i.putExtra("fullname" , fullName);
+                i.putExtra("email" , email.getText().toString());
                 startActivity(i);
                 finish();
             }

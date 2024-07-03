@@ -3,6 +3,8 @@ package com.jafari.kotletapp;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -40,13 +42,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-    }
+        NavigationView navView = binding.navView;
+        LinearLayout navHeader = (LinearLayout) navView.getHeaderView(0);
+        TextView fullNameTV = navHeader.findViewById(R.id.fullNameTV);
+        TextView emailTV = navHeader.findViewById(R.id.emailTV);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        fullNameTV.setText(getIntent().getStringExtra("fullname"));
+        emailTV.setText(getIntent().getStringExtra("email"));
     }
 
     @Override

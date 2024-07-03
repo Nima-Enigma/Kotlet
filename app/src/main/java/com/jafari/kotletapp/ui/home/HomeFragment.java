@@ -31,6 +31,7 @@ import com.jafari.kotletapp.R;
 import com.jafari.kotletapp.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EventListener;
 import java.util.List;
 
@@ -69,8 +70,6 @@ public class HomeFragment extends Fragment {
         findBtn.setOnClickListener(view -> {
             List<Pair<String, Pair<Integer, Integer>>> availableRecipes =
                     databaseHelper.getTop20Recipes(extractIngredients(ingredients));
-
-            System.out.println("we havvvvvvvvvvvvvvveeeeeeeeeeeeeeeeee".concat(Integer.toString(availableRecipes.size())));
             ingredients.removeAllViews();
             ingredients.setColumnCount(1);
             for(int i=0 ; i<availableRecipes.size() ; i++){
@@ -88,13 +87,13 @@ public class HomeFragment extends Fragment {
                 autoCompleteTextView.setText("");
             }
         });
-        binding.admBtn.setOnClickListener(v -> {
-            databaseHelper.addNewIngredient(autoCompleteTextView.getText().toString(), 10);
-            items = databaseHelper.allIngredients();
-            ArrayAdapter<String> new_adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_dropdown_item_1line, items);
-            autoCompleteTextView.setAdapter(new_adapter);
-            autoCompleteTextView.setThreshold(1);
-        });
+//        binding.admBtn.setOnClickListener(v -> {
+//            databaseHelper.addNewIngredient(autoCompleteTextView.getText().toString(), 10);
+//            items = databaseHelper.allIngredients();
+//            ArrayAdapter<String> new_adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_dropdown_item_1line, items);
+//            autoCompleteTextView.setAdapter(new_adapter);
+//            autoCompleteTextView.setThreshold(1);
+//        });
         return root;
     }
 
@@ -142,6 +141,7 @@ public class HomeFragment extends Fragment {
         int innerLinearLayoutWidthSmall = (int) (130 * getResources().getDisplayMetrics().density);
         int paddingVertical = (int) (5 * getResources().getDisplayMetrics().density);
         float radius = 20 * getResources().getDisplayMetrics().density;
+
 
         // Create CardView
         CardView cardView = new CardView(requireActivity());
@@ -271,6 +271,20 @@ public class HomeFragment extends Fragment {
         cardView.setOnClickListener(view -> {
             Dialog dialog = new Dialog(getContext());
             dialog.setContentView(R.layout.recipe_box);
+            TextView recipeNameTV = dialog.findViewById(R.id.recipeName);
+            TextView recipeIngredients = dialog.findViewById(R.id.recipeIng);
+            TextView description = dialog.findViewById(R.id.cookingSteps);
+            ImageView like = dialog.findViewById(R.id.likeRecipe);
+            System.out.println("name is " + firstTextView.getText().toString());
+            String[] nameAndDesc = databaseHelper.getNameAndDescriptionOfRecipe(firstTextView.getText().toString());
+            System.out.println("name and desc: " + Arrays.toString(nameAndDesc));
+            recipeNameTV.setText(nameAndDesc[0]);
+            description.setText(nameAndDesc[1]);
+            String[] ings = databaseHelper.getIngredients(firstTextView.getText().toString());
+            StringBuilder allIngs = new StringBuilder(ings[0]);
+            for (int i = 1; i < ings.length; i++)
+                allIngs.append(", ").append(ings[i]);
+            recipeIngredients.setText(allIngs.toString());
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT);
             dialog.setCancelable(Boolean.TRUE);
             dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.tp));
@@ -310,8 +324,6 @@ public class HomeFragment extends Fragment {
         ingredients.setColumnCount(2);
         ingredients.removeAllViews();
     }
-
-
 
     @Override
     public void onDestroyView() {
