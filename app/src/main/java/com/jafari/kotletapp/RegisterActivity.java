@@ -19,6 +19,7 @@ public class RegisterActivity extends AppCompatActivity {
         EditText email = findViewById(R.id.email);
         EditText password = findViewById(R.id.password);
         Button btn = findViewById(R.id.registerBtn);
+        Button loginBtn = findViewById(R.id.loginBtn);
         btn.setOnClickListener(v -> {
             boolean success = databaseHelper.addUser(email.getText().toString(), password.getText().toString(),
                                     firstName.getText().toString() + " " + lastName.getText().toString());
@@ -27,6 +28,11 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
+        });
+        loginBtn.setOnClickListener(v -> {
+            Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(i);
+            finish();
         });
     }
 }
