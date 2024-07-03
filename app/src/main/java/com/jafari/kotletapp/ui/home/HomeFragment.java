@@ -67,12 +67,15 @@ public class HomeFragment extends Fragment {
         clearBtn.setOnClickListener(view -> clear());
 
         findBtn.setOnClickListener(view -> {
-            System.out.println(extractIngredients(ingredients));
-            ingredients.removeAllViews();
-            ingredients.setColumnCount(1);
-            makeCardRecipe(ingredients);
             List<Pair<String, Pair<Integer, Integer>>> availableRecipes =
                     databaseHelper.getTop20Recipes(extractIngredients(ingredients));
+
+            System.out.println("we havvvvvvvvvvvvvvveeeeeeeeeeeeeeeeee".concat(Integer.toString(availableRecipes.size())));
+            ingredients.removeAllViews();
+            ingredients.setColumnCount(1);
+            for(int i=0 ; i<availableRecipes.size() ; i++){
+                makeCardRecipe(ingredients , availableRecipes.get(i).first , availableRecipes.get(i).second.first , availableRecipes.get(i).second.second);
+            }
         });
 
         addBtn.setOnClickListener(view -> {
@@ -126,7 +129,7 @@ public class HomeFragment extends Fragment {
         plain.addView(cardView);
     }
 
-    void makeCardRecipe(GridLayout gridLayout){
+    void makeCardRecipe(GridLayout gridLayout , String recipeName , Integer ingCount , Integer available){
         // Convert dp to pixels
         int cardViewHeight = (int) (70 * getResources().getDisplayMetrics().density);
         int cardViewMarginBottom = (int) (10 * getResources().getDisplayMetrics().density);
@@ -167,7 +170,8 @@ public class HomeFragment extends Fragment {
         );
         imageViewParams.setMargins(imageViewMarginHorizontal, 0, imageViewMarginHorizontal, 0);
         imageView.setLayoutParams(imageViewParams);
-        imageView.setBackground(ContextCompat.getDrawable(requireActivity(), R.drawable.recipe_book));
+        imageView.setBackground(ContextCompat.getDrawable(requireActivity(), R.drawable.kotlet_logo));
+        imageView.setForegroundGravity(Gravity.CENTER);
 
         // Create inner LinearLayout
         LinearLayout innerLinearLayout = new LinearLayout(requireActivity());
@@ -196,7 +200,7 @@ public class HomeFragment extends Fragment {
                 innerTextViewHeightLarge
         );
         firstTextView.setLayoutParams(firstTextViewParams);
-        firstTextView.setText("Kotlet");
+        firstTextView.setText(recipeName);
         firstTextView.setTextSize(20);
         firstTextView.setGravity(Gravity.CENTER);
 
@@ -232,7 +236,7 @@ public class HomeFragment extends Fragment {
                 innerTextViewHeightSmall
         );
         thirdTextView.setLayoutParams(thirdTextViewParams);
-        thirdTextView.setText("3 available ingredients");
+        thirdTextView.setText((Integer.toString(available).concat(" available ingredients")));
         thirdTextView.setTextSize(10);
         thirdTextView.setTextColor(ContextCompat.getColor(requireActivity(), R.color.green));
         thirdTextView.setGravity(Gravity.CENTER);
@@ -244,7 +248,8 @@ public class HomeFragment extends Fragment {
                 innerTextViewHeightSmall
         );
         fourthTextView.setLayoutParams(fourthTextViewParams);
-        fourthTextView.setText("3 unavailable ingredients");
+        if(ingCount - available > 0)
+            fourthTextView.setText(Integer.toString(ingCount - available).concat(" unavailable ingredients"));
         fourthTextView.setTextSize(10);
         fourthTextView.setTextColor(ContextCompat.getColor(requireActivity(), R.color.red));
         fourthTextView.setGravity(Gravity.CENTER);

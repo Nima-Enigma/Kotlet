@@ -33,6 +33,8 @@ public class GalleryFragment extends Fragment {
     private FragmentGalleryBinding binding;
     private DatabaseHelper databaseHelper;
     private EditText multiLineEditText;
+
+    private EditText recipeName;
     private String[] items;
     private AutoCompleteTextView autoCompleteTextView;
 
@@ -53,6 +55,7 @@ public class GalleryFragment extends Fragment {
         autoCompleteTextView.setAdapter(adapter);
         autoCompleteTextView.setThreshold(1);
         ingredients = binding.ingredients;
+        recipeName = binding.recipeName;
         FloatingActionButton clear = binding.clearBtn;
         View root = binding.getRoot();
 
@@ -89,7 +92,7 @@ public class GalleryFragment extends Fragment {
 
     private void addRecipe() {
         String description = multiLineEditText.getText().toString();
-        databaseHelper.addNewRecipe("name", extractIngredients(ingredients), description, "creator"); // TODO name and creator
+        databaseHelper.addNewRecipe(recipeName.getText().toString(), extractIngredients(ingredients), description, "creator"); // TODO name and creator
     }
 
     public void clear(){

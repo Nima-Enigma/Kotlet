@@ -195,8 +195,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Pair<String, Pair<Integer, Integer>>> getTop20Recipes(List<String> ingredients) {
         SQLiteDatabase db = this.getReadableDatabase();
 
+        System.out.println(ingredients.size());
+
         StringBuilder ingredientsCondition = new StringBuilder();
         for (int i = 0; i < ingredients.size(); i++) {
+            System.out.println(ingredients.get(i));
             ingredientsCondition.append("'").append(ingredients.get(i)).append("'");
             if (i < ingredients.size() - 1)
                 ingredientsCondition.append(", ");
