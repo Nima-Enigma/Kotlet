@@ -77,7 +77,98 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 RECIPE_INGREDIENT_COLUMN_INGREDIENT + " INTEGER, " +
                 "FOREIGN KEY(" + RECIPE_INGREDIENT_COLUMN_RECIPE + ") REFERENCES " + TABLE_RECIPES + "(" + RECIPES_COLUMN_ID + "), " +
                 "FOREIGN KEY(" + RECIPE_INGREDIENT_COLUMN_INGREDIENT + ") REFERENCES " + TABLE_INGREDIENTS + "(" + INGREDIENTS_COLUMN_ID + "));");
-        System.out.println("db created");
+
+        // Insert recipes
+        db.execSQL("INSERT INTO recipes (name, description) VALUES ('Avocado Toast', 'To make Avocado Toast, toast bread until golden brown. Mash ripe avocado and spread it on the toast. Add salt, pepper, and lemon juice to taste. Enjoy this quick and nutritious snack or breakfast option.')");
+        db.execSQL("INSERT INTO recipes (name, description) VALUES ('Caprese Salad', 'To make Caprese Salad, slice fresh tomatoes and mozzarella cheese into rounds. Arrange them on a plate, alternating tomato and cheese slices. Scatter fresh basil leaves over the top. Drizzle with olive oil and balsamic vinegar. Season with salt and pepper to taste. Serve immediately as a light and refreshing appetizer or side dish.')");
+        db.execSQL("INSERT INTO recipes (name, description) VALUES ('Spaghetti Aglio e Olio', 'To prepare Spaghetti Aglio e Olio, cook spaghetti according to package instructions until al dente. In a separate pan, heat olive oil and sauté minced garlic and red pepper flakes until fragrant. Toss the cooked spaghetti in the garlic-infused oil, season with salt and pepper, and sprinkle with chopped parsley. Serve hot with grated Parmesan cheese on top, if desired. Enjoy this simple and flavorful Italian dish!')");
+        db.execSQL("INSERT INTO recipes (name, description) VALUES ('Chicken Stir-Fry', 'To make chicken stir-fry, sauté sliced chicken breast in a hot pan with olive oil until cooked through. Add sliced bell peppers, broccoli, and garlic, cooking until tender. Stir in soy sauce and sesame seeds, mixing well. Serve hot over rice or noodles.')");
+        db.execSQL("INSERT INTO recipes (name, description) VALUES ('Greek Yogurt Parfait', 'To make a Greek yogurt parfait, layer Greek yogurt, honey, granola, fresh berries, nuts, and chia seeds in a glass. Repeat the layers and serve immediately for a delicious and nutritious breakfast or snack.')");
+        db.execSQL("INSERT INTO recipes (name, description) VALUES ('Vegetable Quesadilla', 'To make a vegetable quesadilla, sauté diced onions, bell peppers, and black beans until tender. Heat a tortilla, sprinkle half with shredded cheddar cheese, add the sautéed veggies, and fold the tortilla. Cook until golden brown and cheese melts, then slice and serve with salsa.')");
+        db.execSQL("INSERT INTO recipes (name, description) VALUES ('Banana Smoothie', 'To make a refreshing banana smoothie, combine ripe bananas, milk, Greek yogurt, honey, and ice cubes in a blender. Blend the ingredients until smooth and creamy. For added flavor, you can also include a dash of vanilla extract or a pinch of cinnamon. Serve the smoothie chilled in a glass, and enjoy it as a nutritious breakfast or a quick snack.')");
+
+        // Insert ingredients
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Bread', 265)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Avocado', 160)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Olive oil', 119)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Lemon juice', 6)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Salt', 0)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Pepper', 5)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Tomatoes', 18)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Fresh mozzarella', 280)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Basil leaves', 23)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Balsamic vinegar', 14)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Spaghetti', 158)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Garlic', 149)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Red pepper flakes', 6)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Parsley', 36)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Parmesan cheese', 431)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Chicken breast', 165)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Bell peppers', 24)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Broccoli', 55)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Soy sauce', 53)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Sesame seeds', 573)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Greek yogurt', 59)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Honey', 64)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Granola', 471)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Fresh berries', 32)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Nuts', 607)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Chia seeds', 486)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Tortillas', 159)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Cheddar cheese', 403)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Onion', 40)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Black beans', 132)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Salsa', 36)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Bananas', 89)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Milk', 42)");
+        db.execSQL("INSERT INTO ingredients (name, calorie) VALUES ('Ice cubes', 0)");
+
+        // Insert recipe_ingredient relationships
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (1, 1)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (1, 2)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (1, 3)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (1, 4)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (1, 5)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (1, 6)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (2, 7)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (2, 8)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (2, 9)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (2, 3)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (2, 10)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (2, 5)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (2, 6)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (3, 11)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (3, 12)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (3, 3)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (3, 13)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (3, 14)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (3, 15)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (3, 5)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (4, 16)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (4, 17)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (4, 18)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (4, 19)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (4, 12)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (4, 3)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (4, 20)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (5, 21)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (5, 22)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (5, 23)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (5, 24)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (5, 25)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (5, 26)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (6, 27)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (6, 28)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (6, 17)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (6, 29)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (6, 30)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (6, 31)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (7, 32)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (7, 33)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (7, 21)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (7, 22)");
+        db.execSQL("INSERT INTO recipe_ingredient (recipe, ingredient) VALUES (7, 34)");
+
     }
 
     @Override
