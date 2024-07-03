@@ -36,8 +36,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_RECIPES = "recipes";
     private static final String RECIPES_COLUMN_ID = "_id";
     private static final String RECIPES_COLUMN_NAME = "name";
-    private static final String RECIPES_DESCRIPTION = "description";
+    private static final String RECIPES_COLUMN_DESCRIPTION = "description";
     private static final String RECIPES_COLUMN_CREATOR = "creator";
+    private static final String RECIPES_COLUMN_LIKES = "likes";
 
     private static final String TABLE_RECIPE_INGREDIENT = "recipe_ingredient";
     private static final String RECIPE_INGREDIENT_COLUMN_ID = "_id";
@@ -58,7 +59,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 USERS_COLUMN_PASSWORD + " TEXT, " +
                 USERS_COLUMN_FULL_NAME + " TEXT);");
 
-
         db.execSQL("CREATE TABLE " + TABLE_INGREDIENTS + " (" +
                 INGREDIENTS_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 INGREDIENTS_COLUMN_NAME + " TEXT UNIQUE, " +
@@ -67,8 +67,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + TABLE_RECIPES + " (" +
                 RECIPES_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 RECIPES_COLUMN_NAME + " TEXT, " +
-                RECIPES_DESCRIPTION + " TEXT, " +
-                RECIPES_COLUMN_CREATOR + " TEXT);");
+                RECIPES_COLUMN_DESCRIPTION + " TEXT, " +
+                RECIPES_COLUMN_CREATOR + " TEXT, " +
+                RECIPES_COLUMN_LIKES + " INTEGER);");
 
         db.execSQL("CREATE TABLE " + TABLE_RECIPE_INGREDIENT + " (" +
                 RECIPE_INGREDIENT_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -166,7 +167,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(RECIPES_COLUMN_NAME, name);
         cv.put(RECIPES_COLUMN_CREATOR, creator);
-        cv.put(RECIPES_DESCRIPTION, description);
+        cv.put(RECIPES_COLUMN_DESCRIPTION, description);
+        cv.put(RECIPES_COLUMN_LIKES, 0);
 
         long newRowId = db.insert(TABLE_RECIPES, null, cv);
         System.out.println("new row id = " + newRowId);
@@ -248,6 +250,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return resultList;
+    }
+
+    public void likeRecipe(int recipeID) {
+        try (SQLiteDatabase db = this.getWritableDatabase()) {
+            String query = "UPDATE " + TABLE_RECIPES +
+                    " SET " + RECIPES_COLUMN_LIKES + " = " + RECIPES_COLUMN_LIKES + " + 1" +
+                    " WHERE " + RECIPES_COLUMN_ID + " = " + recipeID;
+            db.execSQL(query);
+        }
     }
 
     public int getTableRowCount(String tableName) {
