@@ -1,5 +1,6 @@
 package com.jafari.kotletapp.ui.home;
 
+import android.app.Dialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
@@ -69,14 +70,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        findBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println(extractIngredients(ingredients));
-                ingredients.removeAllViews();
-                ingredients.setColumnCount(1);
-                makeCardRecipe(ingredients);
-            }
+        findBtn.setOnClickListener(view -> {
+            System.out.println(extractIngredients(ingredients));
+            ingredients.removeAllViews();
+            ingredients.setColumnCount(1);
+            makeCardRecipe(ingredients);
         });
 
         addBtn.setOnClickListener(view -> {
@@ -88,7 +86,6 @@ public class HomeFragment extends Fragment {
                 makeCardIng(ingredients, ingredient);
                 autoCompleteTextView.setText("");
             }
-            System.out.println("ney nigga" + databaseHelper.getTop20Recipes(items));
         });
         binding.admBtn.setOnClickListener(v -> {
             databaseHelper.addNewIngredient(autoCompleteTextView.getText().toString(), 10);
@@ -268,6 +265,14 @@ public class HomeFragment extends Fragment {
 
         // Add outer LinearLayout to CardView
         cardView.addView(outerLinearLayout);
+        cardView.setOnClickListener(view -> {
+            Dialog dialog = new Dialog(getContext());
+            dialog.setContentView(R.layout.recipe_box);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.setCancelable(Boolean.TRUE);
+            dialog.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.tp));
+            dialog.show();
+        });
 
         gridLayout.addView(cardView);
     }
