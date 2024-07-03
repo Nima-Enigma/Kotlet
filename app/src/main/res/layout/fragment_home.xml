@@ -7,33 +7,96 @@
     tools:context=".ui.home.HomeFragment"
     android:orientation="vertical">
 
-    <AutoCompleteTextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Add ingradient"
-        android:id="@+id/autoComplete"/>
-    <Button
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ingredients"
+                android:fontFamily="sans-serif-black"
+                android:textSize="40sp"
+                android:layout_marginTop="20dp">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What do you have in your kitchen?">
+            </TextView>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@drawable/ingredient">
+        </ImageView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:gravity="start">
+        <AutoCompleteTextView
+            android:layout_width="0dp"
+            android:layout_weight="7"
+            android:layout_height="50dp"
+            android:background="@drawable/custom_edittext"
+            android:hint="Add ingredient"
+            android:id="@+id/autoComplete"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textColor="@color/black"
+            android:textColorHighlight="@color/cardview_dark_background"
+            android:layout_marginEnd="10dp">
+        </AutoCompleteTextView>
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:id="@+id/addBtn"
+            android:text="+"
+            android:textSize="18sp"
+            android:backgroundTint="@color/yellow"
+            app:cornerRadius = "30dp"/>
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
+        android:layout_margin="20dp">
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ingredients"
+            android:columnCount="2">
+
+        </GridLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/findBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add"
-        android:id="@+id/addBtn"/>
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/fab_margin"
+        app:srcCompat="@drawable/find" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="add as admin"
         android:id="@+id/admBtn"/>
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </LinearLayout>

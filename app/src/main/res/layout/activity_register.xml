@@ -109,7 +109,7 @@
                 android:id="@+id/loginBtn"
                 android:text="Login"
                 android:textSize="18sp"
-                android:backgroundTint="@color/purple"
+                android:backgroundTint="@color/yellow"
                 app:cornerRadius = "20dp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
