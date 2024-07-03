@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Pair;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -96,6 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         long result = db.insert(TABLE_USERS, null, cv);
         Toast.makeText(context, result == -1 ? "Failed to add user" : "User added successfully", Toast.LENGTH_SHORT).show();
+        db.close();
         return result != -1;
     }
 
@@ -109,6 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, valid ? "OK" : "Invalid", Toast.LENGTH_SHORT).show();
             return valid;
         }
+        db.close();
         Toast.makeText(context, "Invalid", Toast.LENGTH_SHORT).show();
         return false;
     }
@@ -166,6 +169,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(RECIPES_DESCRIPTION, description);
 
         long newRowId = db.insert(TABLE_RECIPES, null, cv);
+        System.out.println("new row id = " + newRowId);
 
         for (String ingredient: ingredients) {
             ContentValues contentValues = new ContentValues();
@@ -175,7 +179,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Cursor cursor = db.rawQuery(query, new String[]{ingredient});
             if (cursor != null && cursor.moveToFirst()) {
                 System.out.println("looking for " + ingredient);
-                System.out.println(cursor.getColumnIndex(INGREDIENTS_COLUMN_ID));
+                System.out.println(cursor.getLong(0));
                 contentValues.put(RECIPE_INGREDIENT_COLUMN_INGREDIENT, cursor.getLong(0));
                 cursor.close();
             }
@@ -183,5 +187,82 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         db.close();
+    }
+
+    public List<Pair<String, Pair<Integer, Integer>>> getTop20Recipes(String[] ingredients) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        StringBuilder ingredientsCondition = new StringBuilder();
+        for (int i = 0; i < ingredients.length; i++) {
+            ingredientsCondition.append("'").append(ingredients[i]).append("'");
+            if (i < ingredients.length - 1)
+                ingredientsCondition.append(", ");
+        }
+
+        System.out.println("number of rows in RI = " + this.getTableRowCount(TABLE_RECIPE_INGREDIENT));
+        System.out.println("total number of ingredients = " + this.getTableRowCount(TABLE_RECIPES));
+
+        String query = "SELECT r." + RECIPES_COLUMN_NAME + ", r." + RECIPES_COLUMN_ID + ", COUNT(ri." + RECIPE_INGREDIENT_COLUMN_INGREDIENT + ") AS score " +
+                "FROM " + TABLE_RECIPES + " r " +
+                "JOIN " + TABLE_RECIPE_INGREDIENT + " ri ON r." + RECIPES_COLUMN_ID + " = ri." + RECIPE_INGREDIENT_COLUMN_RECIPE + " " +
+                "JOIN " + TABLE_INGREDIENTS + " i ON ri." + RECIPE_INGREDIENT_COLUMN_INGREDIENT + " = i." + INGREDIENTS_COLUMN_ID + " " +
+                "WHERE i." + INGREDIENTS_COLUMN_NAME + " IN (" + ingredientsCondition.toString() + ") " +
+                "GROUP BY r." + RECIPES_COLUMN_ID + " " +
+                "ORDER BY score DESC " +
+                "LIMIT 20;";
+
+        System.out.println("outer query " + query);
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<Pair<String, Pair<Integer, Integer>>> resultList = new ArrayList<>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                System.out.println("begin");
+                String recipeName = cursor.getString(cursor.getColumnIndexOrThrow(RECIPES_COLUMN_NAME));
+                System.out.println("recipe name: " + recipeName);
+                long recipeID = cursor.getLong(cursor.getColumnIndexOrThrow(RECIPES_COLUMN_ID));
+                System.out.println("hey, recipe id = " + recipeID);
+                int currentIngredients = cursor.getInt(cursor.getColumnIndexOrThrow("score"));
+                System.out.println("score = " + currentIngredients);
+                String innerQuery = "SELECT COUNT(*) FROM " +
+                                        TABLE_RECIPE_INGREDIENT +
+                                        " WHERE " + RECIPE_INGREDIENT_COLUMN_RECIPE + "=" + recipeID +
+                                        " GROUP BY " + RECIPE_INGREDIENT_COLUMN_RECIPE;
+                System.out.println("inner query " + innerQuery);
+                Cursor innerCursor = db.rawQuery(innerQuery, null);
+                if (innerCursor.moveToFirst()) {
+                    do {
+                        System.out.println("hello there");
+                        int totalIngredients = innerCursor.getInt(0);
+                        System.out.println(totalIngredients);
+                        resultList.add(new Pair<>(recipeName, new Pair<>(totalIngredients, currentIngredients)));
+                    } while (innerCursor.moveToNext());
+                }
+                innerCursor.close();
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return resultList;
+    }
+
+    public int getTableRowCount(String tableName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT COUNT(*) FROM " + tableName;
+        Cursor cursor = db.rawQuery(query, null);
+
+        int rowCount = 0;
+        if (cursor.moveToFirst()) {
+            rowCount = cursor.getInt(0);
+        }
+
+        cursor.close();
+        // db.close(); //TODO
+
+        return rowCount;
     }
 }
