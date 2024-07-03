@@ -82,7 +82,6 @@ public class GalleryFragment extends Fragment {
 
         makeCardIng(ingredients, text);
         autoCompleteTextView.setText("");
-
     }
 
     private void addRecipe() {
